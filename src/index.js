@@ -1,4 +1,4 @@
-import NewAskServer from "./js/fetchserv.js";
+import NewAskServer from "./JS/fetchserv";
 export { renderImgGallery };
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
