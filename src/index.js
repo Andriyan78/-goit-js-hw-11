@@ -40,9 +40,10 @@ btnSubmit.addEventListener('click', async (e) => {
 function renderImgGallery(hits) {
   if (hits.length === 0) {
     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    btnLoadMore.classList.replace('is-visible', 'is-hidden');
+    btnLoadMore.classList.replace('is-hidden');
     return;
   }
+  
  
   const markup = hits
     .map(

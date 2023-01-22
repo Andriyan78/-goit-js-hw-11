@@ -3,7 +3,7 @@ import Notiflix from "notiflix";
 
 const input = document.querySelector('input');
 const btnLoadMore = document.querySelector('.load-more');
-
+const KEY = '32999305-dd322609f910976659da09787'
 export default class NewAskServer {
   constructor(){
     this.page = 1;
@@ -18,9 +18,9 @@ export default class NewAskServer {
 
   if (this.name.length === 0) {
     return;
-  }
-  try {
-    const response = await axios.get(`${this.BASEURL}?key=32999305-dd322609f910976659da09787&q=${this.name}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.per_page}&page=${this.page}`);
+    }
+  const response = await axios.get(`${this.BASEURL}?key=${KEY}&q=${this.name}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.per_page}&page=${this.page}`);
+  try {    
     const totalHits = await response.data.totalHits;
     console.log(totalHits);
     this.incrementPage();
