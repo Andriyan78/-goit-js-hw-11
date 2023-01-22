@@ -1,47 +1,12 @@
-import axios from "axios";
-import Notiflix from "notiflix";
+export { fetchArticles };
+import axios from 'axios';
 
-const input = document.querySelector('input');
-const btnLoadMore = document.querySelector('.load-more');
 const KEY = '32999305-dd322609f910976659da09787'
-export default class NewAskServer {
-  constructor(){
-    this.page = 1;
-    this.name = " ";
-  }
+const BASE_URL = 'https://pixabay.com/api/';
 
-  async fetchArticles() {
-    this.BASEURL = 'https://pixabay.com/api/';
-    this.name = input.value.trim();
-    this.per_page = 40;
-    this.numberCard = this.per_page;
-
-  if (this.name.length === 0) {
-    return;
-    }
-  const response = await axios.get(`${this.BASEURL}?key=${KEY}&q=${this.name}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.per_page}&page=${this.page}`);
-  try {    
-    const totalHits = await response.data.totalHits;
-    console.log(totalHits);
-    this.incrementPage();
-    if (this.numberCard > totalHits) {
-      Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-      btnLoadMore.classList.replace('is-visible', 'is-hidden');
-
-  }
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-  }
-
-  incrementPage() {
-    this.numberCard *=this.page;
-    console.log(this.numberCard);
-    this.page += 1;
-  }
-  resetPage() {
-    this.page = 1;
-  }
-
+async function fetchArticles(searchQuery, page = 1) {
+  const response = await axios.get(
+    `${BASE_URL}?key=${KEY}&q=${searchQuery}&image_type=photo&orientation =horizontal&safesearch =true&per_page=40&page=${page}`
+  );
+  return response.data;
 }
