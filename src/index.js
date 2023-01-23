@@ -1,101 +1,107 @@
-import { fetchArticles } from "./JS/fetchserv";
+// імпорти
+
+import NewAskServer from "./js/fetchserv";
+export { renderImgGallery };
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
+// елементи
+const btnSubmit = document.querySelector('button');
+const gallery = document.querySelector('.gallery');
+const btnLoadMore = document.querySelector('.load-more'); 
 
-const formEl = document.querySelector('.search-form');
-const galleryEl = document.querySelector('.gallery');
-const btnLoadMore = document.querySelector('.load-more');
+const newAskServer = new NewAskServer();
 
-let page = 1;
-let searchQuery;
-
-formEl.addEventListener('submit', onSearch);
-btnLoadMore.addEventListener('click', onLoadMore);
-galleryEl.addEventListener('click', onGalleryClick);
-
-function onSearch(e) {
+// подія сабміт
+btnSubmit.addEventListener('click', async (e) => {
   e.preventDefault();
-  galleryEl.innerHTML = '';
+  btnLoadMore.classList.replace('is-visible', 'is-hidden');
+  clearArticlesContainer();
+ 
+  try {
+    newAskServer.resetPage();
+    const data = await newAskServer.fetchArticles();
 
-  let searchQuery = formEl.children[0].value.trim();
+    const hits = await data.data.hits;
+    const totalHits = await data.data.totalHits;
 
-  if (searchQuery.length === 0) {
-    return Notiflix.Notify.failure('Please, enter a query.');
+    Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
+
+    renderImgGallery(hits);
+     btnLoadMore.classList.replace('is-hidden', 'is-visible');
+    let galleryOpenModal = new SimpleLightbox('.gallery a');
+      galleryOpenModal.on('show.simplelightbox', function () {
+});
+  } catch (error) {
+    console.log(error.message);
   }
+});
 
-  fetchArticles(searchQuery, page)
-    .then(data => {
-      console.log(data);
-      if (data.hits.length === 0) {
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      } else {
-        galleryMarkup(data.hits);
-        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-        btnLoadMore.hidden = false;
-      }
-    })
-    .catch(err => console.log(err));
-}
-
-function galleryMarkup(arr) {
-  const markup = arr
+// функція рендеру галереї
+function renderImgGallery(hits) {
+  if (hits.length === 0) {
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    btnLoadMore.classList.replace('is-visible', 'is-hidden');
+    return;
+  }
+ 
+  const markup = hits
     .map(
-      ({
-        largeImageURL,
-        webformatURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => `<div class="photo-card">
-  <a class="gallery__link" href="${largeImageURL}" style ="display:inline-block; text-decoration:none; color:black;">
+        (({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
+        return `
+        <div class="photo-card gallery__item">
+        <a class="gallery__link" href="${largeImageURL}" style ="display:inline-block; text-decoration:none; color:black;">
    <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
-  <div class="info">
-    <p class="info-item">
-    <b>Likes</b> <span class="info-item-api"> ${likes} </span>
-</p>
-            <p class="info-item">
-                <b>Views</b> <span class="info-item-api">${views}</span>  
-            </p>
-            <p class="info-item">
-                <b>Comments</b> <span class="info-item-api">${comments}</span>  
-            </p>
-            <p class="info-item">
-                <b>Downloads</b> <span class="info-item-api">${downloads}</span> 
-            </p>
-  </div>
-</div>`
-    )
-    .join('');
+      <div class="info">
+        <p class="info-item">
+          <b>Likes</b>${likes}
+        </p>
+        <p class="info-item">
+          <b>Views</b>${views}
+        </p>
+        <p class="info-item">
+          <b>Comments</b>${comments}
+        </p>
+        <p class="info-item">
+          <b>Downloads</b>${downloads}
+        </p>
+      </div></a>
+      </div> `;
+      }))
+ 
+    .join(" ");
+  gallery.insertAdjacentHTML('beforeend', markup);
 
-  galleryEl.insertAdjacentHTML('beforeend', markup);
+  const { height: cardHeight } = document
+  .querySelector(".gallery")
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 0.25,
+  behavior: "smooth",
+});
 }
 
-  function onGalleryClick(evt) {
-    evt.preventDefault();
-    const gallery = new SimpleLightbox('.gallery a', {
-      captionDelay: 250,
+// подія показати більше
+btnLoadMore.addEventListener('click', async (e) => {
+  e.preventDefault();
+
+  try {
+    const data = await newAskServer.fetchArticles();
+    const hits = await data.data.hits;
+    renderImgGallery(hits);
+    let galleryOpenModal = new SimpleLightbox('.gallery a');
+    galleryOpenModal.on('show.simplelightbox', function () {
     });
+    // ? refresh SimpleLightbox???npm 
+    galleryOpenModal.refresh();
+  } catch (error) {
+    console.log(error.message);
   }
+});
 
-  function onLoadMore() {
-    page += 1;
-
-    fetchArticles(searchQuery, page).then(data => {
-      galleryMarkup(data.hits);
-
-
-      if ((page - 1) * 40 + data.hits.length >= data.total) {
-        btnLoadMore.hidden = true;
-        Notiflix.Notify.info(
-          "We're sorry, but you've reached the end of search results."
-        );
-      }
-    });
+// функція онулення сторніки
+function clearArticlesContainer() {
+  gallery.innerHTML = " ";
 }
-  
