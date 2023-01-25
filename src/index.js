@@ -1,6 +1,6 @@
-import fetchServ from "./js/fetchserv";
-import galleryCreate from "./js/galery-markup"
-import SimpleLightbox from "simplelightbox";
+import FetchServ from "./JS/fetchserv";
+import galleryCreate from "./js/galery-markup";
+// import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
@@ -9,7 +9,7 @@ import Notiflix from "notiflix";
 const gallery = document.querySelector('.gallery');
 const btnLoadMore = document.querySelector('.load-more'); 
 const searchForm = document.querySelector('#search-form')
-const fetchServ = new Fetchserv();
+const newFetch = new FetchServ();
 
 searchForm.addEventListener('submit', onSearch);
 btnLoadMore.addEventListener('click', onLoadMore);
@@ -21,17 +21,17 @@ async function onSearch(e) {
         btnLoadMore.hidden = false
     ]}
 
-    Fetchserv.searchQuery = e.currentTarget.elements.searchQuery.value;
-    Fetchserv.resetPage();
+    newFetch.searchQuery = e.currentTarget.elements.searchQuery.value;
+    newFetch.resetPage();
 
     try {
-        if(Fetchserv.searchQuery === '') {
+        if(newFetch.searchQuery === '') {
           clearList();
           Notiflix.Notify.failure('Please enter your search data.');
         }
         else {
         btnLoadMore.hidden = false;
-        const response = await Fetchserv.makeRequest();
+        const response = await newFetch.makeRequest();
         const {
             data: { hits, totalHits },
                 } = response;
@@ -44,7 +44,7 @@ async function onSearch(e) {
         } else {
         btnLoadMore.hidden = true;
         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        createGallery(hits);
+        galleryCreate(hits);
         }
         btnLoadMore.hidden = false;
       }
@@ -58,7 +58,7 @@ async function onSearch(e) {
 }
 
 async function onLoadMore() {
-    const response = await Fetchserv.makeRequest();
+    const response = await newFetch.makeRequest();
     const {
       data: { hits },
     } = response;

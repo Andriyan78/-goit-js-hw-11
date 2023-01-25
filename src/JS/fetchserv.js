@@ -1,5 +1,5 @@
 import axios from "axios";
-import Notiflix from "notiflix";
+// import Notiflix from "notiflix";
 
 const input = document.querySelector('input');
 const btnLoadMore = document.querySelector('.load-more');
@@ -7,7 +7,7 @@ btnLoadMore.hidden = true;
 
 const KEY = '32999305-dd322609f910976659da09787';
 
-export default class fetchServ  {
+export default class FetchServ  {
   constructor(){
     this.page = 1;
     this.name = " ";
@@ -27,11 +27,7 @@ export default class fetchServ  {
     const totalHits = await response.data.totalHits;
     console.log(totalHits);
     this.incrementPage();
-  //   if (this.numberCard > totalHits) {
-  //     Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
-  //     btnLoadMore.classList.replace('is-visible', 'is-hidden');
-  // }
-    return response;
+      return response;
   } catch (error) {
     console.log(error);
   }
