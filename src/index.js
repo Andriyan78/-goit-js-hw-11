@@ -1,107 +1,73 @@
-// імпорти
-
-import NewAskServer from "./js/fetchserv";
-export { renderImgGallery };
+import fetchServ from "./js/fetchserv";
+import galleryCreate from "./js/galery-markup"
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
-// елементи
-const btnSubmit = document.querySelector('button');
+
+// const btnSubmit = document.querySelector('button');
 const gallery = document.querySelector('.gallery');
 const btnLoadMore = document.querySelector('.load-more'); 
+const searchForm = document.querySelector('#search-form')
+const fetchServ = new Fetchserv();
 
-const newAskServer = new NewAskServer();
+searchForm.addEventListener('submit', onSearch);
+btnLoadMore.addEventListener('click', onLoadMore);
 
-// подія сабміт
-btnSubmit.addEventListener('click', async (e) => {
-  e.preventDefault();
-  btnLoadMore.classList.replace('is-visible', 'is-hidden');
-  clearArticlesContainer();
- 
-  try {
-    newAskServer.resetPage();
-    const data = await newAskServer.fetchArticles();
+async function onSearch(e) {
+    e.preventDefault();
 
-    const hits = await data.data.hits;
-    const totalHits = await data.data.totalHits;
+    if(!btnLoadMore.hidden == true) {[
+        btnLoadMore.hidden = false
+    ]}
 
-    Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
+    Fetchserv.searchQuery = e.currentTarget.elements.searchQuery.value;
+    Fetchserv.resetPage();
 
-    renderImgGallery(hits);
-     btnLoadMore.classList.replace('is-hidden', 'is-visible');
-    let galleryOpenModal = new SimpleLightbox('.gallery a');
-      galleryOpenModal.on('show.simplelightbox', function () {
-});
-  } catch (error) {
-    console.log(error.message);
-  }
-});
+    try {
+        if(Fetchserv.searchQuery === '') {
+          clearList();
+          Notiflix.Notify.failure('Please enter your search data.');
+        }
+        else {
+        btnLoadMore.hidden = false;
+        const response = await Fetchserv.makeRequest();
+        const {
+            data: { hits, totalHits },
+                } = response;
+                clearList();
+                btnLoadMore.hidden = true;
+        
+      
+        if (hits.length === 0) {
+          Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+        } else {
+        btnLoadMore.hidden = true;
+        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+        createGallery(hits);
+        }
+        btnLoadMore.hidden = false;
+      }
 
-// функція рендеру галереї
-function renderImgGallery(hits) {
-  if (hits.length === 0) {
-    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    btnLoadMore.classList.replace('is-visible', 'is-hidden');
-    return;
-  }
- 
-  const markup = hits
-    .map(
-        (({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
-        return `
-        <div class="photo-card gallery__item">
-        <a class="gallery__link" href="${largeImageURL}" style ="display:inline-block; text-decoration:none; color:black;">
-   <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
-      <div class="info">
-        <p class="info-item">
-          <b>Likes</b>${likes}
-        </p>
-        <p class="info-item">
-          <b>Views</b>${views}
-        </p>
-        <p class="info-item">
-          <b>Comments</b>${comments}
-        </p>
-        <p class="info-item">
-          <b>Downloads</b>${downloads}
-        </p>
-      </div></a>
-      </div> `;
-      }))
- 
-    .join(" ");
-  gallery.insertAdjacentHTML('beforeend', markup);
+      } catch (err) {
+      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
+      console.log(err.message);
 
-  const { height: cardHeight } = document
-  .querySelector(".gallery")
-  .firstElementChild.getBoundingClientRect();
-
-window.scrollBy({
-  top: cardHeight * 0.25,
-  behavior: "smooth",
-});
+      btnLoadMore.hidden = true;
+}
 }
 
-// подія показати більше
-btnLoadMore.addEventListener('click', async (e) => {
-  e.preventDefault();
+async function onLoadMore() {
+    const response = await Fetchserv.makeRequest();
+    const {
+      data: { hits },
+    } = response;
+    
+    if (hits.length === 0) {
+      Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    } else galleryCreate(hits); 
+};
 
-  try {
-    const data = await newAskServer.fetchArticles();
-    const hits = await data.data.hits;
-    renderImgGallery(hits);
-    let galleryOpenModal = new SimpleLightbox('.gallery a');
-    galleryOpenModal.on('show.simplelightbox', function () {
-    });
-    // ? refresh SimpleLightbox???npm 
-    galleryOpenModal.refresh();
-  } catch (error) {
-    console.log(error.message);
-  }
-});
-
-// функція онулення сторніки
-function clearArticlesContainer() {
-  gallery.innerHTML = " ";
+function clearList() {
+    gallery.innerHTML = "";
 }
