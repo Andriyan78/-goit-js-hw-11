@@ -1,6 +1,5 @@
 import FetchServ from "./JS/fetchserv";
 import galleryCreate from "./JS/galery-markup";
-// import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
@@ -17,9 +16,9 @@ btnLoadMore.addEventListener('click', onLoadMore);
 async function onSearch(e) {
     e.preventDefault();
 
-    if(!btnLoadMore.hidden == true) {[
-        btnLoadMore.hidden = false
-    ]}
+    // if(!btnLoadMore.hidden == true) {[
+    //     btnLoadMore.hidden = false
+    // ]}
 
     newFetch.searchQuery = e.currentTarget.elements.searchQuery.value;
     newFetch.resetPage();
@@ -31,7 +30,7 @@ async function onSearch(e) {
         }
         else {
         btnLoadMore.hidden = false;
-        const response = await newFetch.makeRequest();
+        const response = await newFetch.fetchArticles();
         const {
             data: { hits, totalHits },
                 } = response;
@@ -58,7 +57,7 @@ async function onSearch(e) {
 }
 
 async function onLoadMore() {
-    const response = await newFetch.makeRequest();
+    const response = await newFetch.fetchArticles();
     const {
       data: { hits },
     } = response;

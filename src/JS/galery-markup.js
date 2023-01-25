@@ -1,4 +1,4 @@
-// import SimpleLightbox from "Simplelightbox";
+import SimpleLightbox from "Simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 const gallery = document.querySelector('.gallery');
@@ -35,7 +35,7 @@ export default async function galleryCreate(hits) {
     gallery.insertAdjacentHTML('beforeend', markup);                                                  
     const Simplelightbox = new Simplelightbox('.gallery a', {
       captionsData: 'alt',
-      captionDelay: 250,
+        captionDelay: 250,
     });
      
 };

@@ -1,9 +1,9 @@
 import axios from "axios";
-// import Notiflix from "notiflix";
 
 const input = document.querySelector('input');
 const btnLoadMore = document.querySelector('.load-more');
 btnLoadMore.hidden = true;
+
 
 const KEY = '32999305-dd322609f910976659da09787';
 
