@@ -1,5 +1,6 @@
 import FetchServ from "./JS/fetchserv";
 import galleryCreate from "./JS/galery-markup";
+import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from "notiflix";
 
