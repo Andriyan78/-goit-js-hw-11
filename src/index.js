@@ -16,8 +16,8 @@ btnLoadMore.addEventListener('click', onLoadMore);
 async function onSearch(e) {
   e.preventDefault();
   
-   if(!loadMoreBtn.hidden === true) {[
-        loadMoreBtn.hidden = false
+   if(!btnLoadMore.hidden === true) {[
+        btnLoadMore.hidden = false
     ]}
 
     newFetch.searchQuery = e.currentTarget.elements.searchQuery.value;

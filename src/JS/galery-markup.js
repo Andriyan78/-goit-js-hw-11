@@ -37,9 +37,11 @@ export default async function galleryCreate(hits) {
   
 function onGalleryClick(evt) {
   evt.preventDefault();
-  const gallery = new SimpleLightbox('.gallery a', {
-    captionDelay: 250,
-  });
+ let galleryOpenModal = new SimpleLightbox('.gallery a');
+    galleryOpenModal.on('show.simplelightbox', function () {
+    });
+   
+    galleryOpenModal.refresh();
 }
     
      
