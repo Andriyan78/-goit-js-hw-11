@@ -29,7 +29,7 @@ async function onSearch(e) {
           Notiflix.Notify.failure('Please enter your search data.');
         }
         else {
-        btnLoadMore.hidden = false;
+        // btnLoadMore.hidden = false;
         const response = await newFetch.fetchArticles();
         const {
             data: { hits, totalHits },
@@ -42,11 +42,12 @@ async function onSearch(e) {
           Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
           
         } else {
-        btnLoadMore.hidden = true;
+        
         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        galleryCreate(hits);
+          galleryCreate(hits);
+          btnLoadMore.hidden = true;
         }
-        btnLoadMore.hidden = true;
+        btnLoadMore.hidden = false;
       }
 
       } catch (err) {
