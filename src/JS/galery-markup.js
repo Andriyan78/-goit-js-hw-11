@@ -3,7 +3,14 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 
 const gallery = document.querySelector('.gallery');
 
-
+function onGalleryClick(evt) {
+  evt.preventDefault();
+ let galleryOpenModal = new SimpleLightbox('.gallery a');
+    galleryOpenModal.on('show.simplelightbox', function () {
+    });
+   
+    galleryOpenModal.refresh();
+}
 export default async function galleryCreate(hits) {
     const markup = hits.map(
             (({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
@@ -35,14 +42,14 @@ export default async function galleryCreate(hits) {
     gallery.insertAdjacentHTML('beforeend', markup);   
 
   
-function onGalleryClick(evt) {
-  evt.preventDefault();
- let galleryOpenModal = new SimpleLightbox('.gallery a');
-    galleryOpenModal.on('show.simplelightbox', function () {
-    });
+// function onGalleryClick(evt) {
+//   evt.preventDefault();
+//  let galleryOpenModal = new SimpleLightbox('.gallery a');
+//     galleryOpenModal.on('show.simplelightbox', function () {
+//     });
    
-    galleryOpenModal.refresh();
-}
+//     galleryOpenModal.refresh();
+// }
     
      
 };

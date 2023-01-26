@@ -29,45 +29,45 @@ async function onSearch(e) {
           Notiflix.Notify.failure('Please enter your search data.');
         }
         else {
-        // btnLoadMore.hidden = false;
+        
         const response = await newFetch.fetchArticles();
         const {
             data: { hits, totalHits },
                 } = response;
                 clearList();
-                btnLoadMore.hidden = true;
+                btnLoadMore.hidden = false;
         
       
         if (hits.length === 0) {
           Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
           
-        } else {
-        
+        } else {        
         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
           galleryCreate(hits);
+          let galleryOpenModal = new SimpleLightbox('.gallery a');
+    galleryOpenModal.on('show.simplelightbox', function () {
+    galleryOpenModal.refresh();});             
           btnLoadMore.hidden = true;
         }
         btnLoadMore.hidden = false;
-      }
-
-      } catch (err) {
+      }} catch (err) {
       Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
       console.log(err.message);
-
-      btnLoadMore.hidden = true;
-}
-}
-
+      btnLoadMore.hidden = true;}}
 async function onLoadMore() {
     const response = await newFetch.fetchArticles();
     const {
-      data: { hits },
-    } = response;
-    
+      data: { hits },} = response;    
     if (hits.length === 0) {
       Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
       btnLoadMore.hidden = true;
-    } else galleryCreate(hits); 
+    } else {
+      galleryCreate(hits);
+    let galleryOpenModal = new SimpleLightbox('.gallery a');
+    galleryOpenModal.on('show.simplelightbox', function () {
+    galleryOpenModal.refresh();});   
+    
+}
 };
 
 function clearList() {
