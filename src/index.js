@@ -11,7 +11,7 @@ const searchForm = document.querySelector('#search-form')
 const newFetch = new FetchServ();
 
 searchForm.addEventListener('submit', onSearch);
-btnLoadMore.addEventListener('click', onLoadMore);
+// btnLoadMore.addEventListener('click', onLoadMore);
 
 async function onSearch(e) {
   e.preventDefault();

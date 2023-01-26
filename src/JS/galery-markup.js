@@ -35,12 +35,12 @@ export default async function galleryCreate(hits) {
     gallery.insertAdjacentHTML('beforeend', markup);   
 
   
-function onGalleryClick(evt) {
-  evt.preventDefault();
-  const gallery = new SimpleLightbox('.gallery a', {
-    captionDelay: 250,
-  });
-}
+// function onGalleryClick(evt) {
+//   evt.preventDefault();
+//   const gallery = new SimpleLightbox('.gallery a', {
+//     captionDelay: 250,
+//   });
+// }
     
      
 };
