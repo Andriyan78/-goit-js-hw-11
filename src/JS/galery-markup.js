@@ -33,11 +33,14 @@ export default async function galleryCreate(hits) {
               }));
     
     gallery.insertAdjacentHTML('beforeend', markup);   
-    Simplelightbox.refresh();
 
-    const Simplelightbox = new Simplelightbox('.gallery a', {
-      captionsData: 'alt',
-        captionDelay: 250,
-    });
+  
+function onGalleryClick(evt) {
+  evt.preventDefault();
+  const gallery = new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
+  });
+}
+    
      
 };

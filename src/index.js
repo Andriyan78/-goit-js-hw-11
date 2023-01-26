@@ -14,7 +14,11 @@ searchForm.addEventListener('submit', onSearch);
 btnLoadMore.addEventListener('click', onLoadMore);
 
 async function onSearch(e) {
-    e.preventDefault();
+  e.preventDefault();
+  
+   if(!loadMoreBtn.hidden === true) {[
+        loadMoreBtn.hidden = false
+    ]}
 
     newFetch.searchQuery = e.currentTarget.elements.searchQuery.value;
     newFetch.resetPage();
@@ -36,12 +40,13 @@ async function onSearch(e) {
       
         if (hits.length === 0) {
           Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+          
         } else {
         btnLoadMore.hidden = true;
         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
         galleryCreate(hits);
         }
-        btnLoadMore.hidden = false;
+        btnLoadMore.hidden = true;
       }
 
       } catch (err) {
