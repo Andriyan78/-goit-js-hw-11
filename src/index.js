@@ -13,7 +13,7 @@ const newFetch = new FetchServ();
 
 searchForm.addEventListener('submit', onSearch);
 btnLoadMore.addEventListener('click', onLoadMore);
-
+let galleryOpenModal = new SimpleLightbox('.gallery a');
 async function onSearch(e) {
   e.preventDefault();
   
@@ -45,9 +45,7 @@ async function onSearch(e) {
         } else {        
         Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
           galleryCreate(hits);
-          let galleryOpenModal = new SimpleLightbox('.gallery a');
-    galleryOpenModal.on('show.simplelightbox', function () {
-    galleryOpenModal.refresh();});             
+          galleryOpenModal.refresh();     
           btnLoadMore.hidden = true;
         }
         btnLoadMore.hidden = false;
@@ -64,9 +62,8 @@ async function onLoadMore() {
       btnLoadMore.hidden = true;
     } else {
       galleryCreate(hits);
-    let galleryOpenModal = new SimpleLightbox('.gallery a');
-    galleryOpenModal.on('show.simplelightbox', function () {
-    galleryOpenModal.refresh();});   
+    
+    galleryOpenModal.refresh();   
     
 }
 };
